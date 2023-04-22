@@ -1,20 +1,15 @@
 const { HttpError } = require("../helpers");
-const {
-  listContacts,
-  getContactById,
-  addContact,
-  removeContact,
-  updateContact,
-} = require("../models/contacts");
+
 const { controllersWrapper } = require("../decorators");
+const { Contact } = require("../models/contact");
 
 async function getAllBooks(req, res) {
-  const data = await listContacts();
+  const data = await Contact.find();
   res.json(data);
 }
 
 async function getBookById(req, res) {
-  const data = await getContactById(req.params.contactId);
+  const data = await Contact.findById(req.params.contactId);
   if (!data) {
     throw HttpError(404, `Contact with id ${req.params.contactId} not found!`);
   }
@@ -22,20 +17,18 @@ async function getBookById(req, res) {
 }
 
 async function addBook(req, res) {
-  const body = req.body;
+  const alreadyAdded = await Contact.find({ email: req.body.email });
 
-  const data = await addContact(body);
-  if (!data) {
-    throw HttpError(409, `Contact with email ${body.email} already added`);
+  if (alreadyAdded.length > 0) {
+    throw HttpError(409, `Contact with email ${req.body.email} already added`);
   }
 
+  const data = await Contact.create(req.body);
   res.status(201).json(data);
 }
 
 async function updateBook(req, res) {
-  const body = req.body;
-
-  const data = await updateContact(req.params.contactId, body);
+  const data = await Contact.findByIdAndUpdate(req.params.contactId, req.body);
   if (!data) {
     throw HttpError(404, `Book with id ${req.params.contactId} not found!`);
   }
@@ -44,8 +37,7 @@ async function updateBook(req, res) {
 }
 
 async function deleteBook(req, res) {
-  const data = await removeContact(req.params.contactId);
-  console.log(data);
+  const data = await Contact.findByIdAndDelete(req.params.contactId);
   if (!data) {
     throw HttpError(400, `Contact with id ${req.params.contactId} not found!`);
   }
@@ -55,10 +47,23 @@ async function deleteBook(req, res) {
   });
 }
 
+async function updateFavoriteField(req, res) {
+  const data = await Contact.findByIdAndUpdate(req.params.contactId, req.body, {
+    new: true,
+  });
+
+  if (!data) {
+    throw HttpError(400, `Contact with id ${req.params.contactId} not found!`);
+  }
+
+  res.json(data);
+}
+
 module.exports = {
   getAllBooks: controllersWrapper(getAllBooks),
   getBookById: controllersWrapper(getBookById),
   addBook: controllersWrapper(addBook),
   updateBook: controllersWrapper(updateBook),
+  updateFavoriteField: controllersWrapper(updateFavoriteField),
   deleteBook: controllersWrapper(deleteBook),
 };
