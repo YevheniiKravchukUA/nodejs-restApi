@@ -39,7 +39,7 @@ async function updateBook(req, res) {
 async function deleteBook(req, res) {
   const data = await Contact.findByIdAndDelete(req.params.contactId);
   if (!data) {
-    throw HttpError(400, `Contact with id ${req.params.contactId} not found!`);
+    throw HttpError(404, `Contact with id ${req.params.contactId} not found!`);
   }
 
   res.json({
@@ -53,7 +53,7 @@ async function updateFavoriteField(req, res) {
   });
 
   if (!data) {
-    throw HttpError(400, `Contact with id ${req.params.contactId} not found!`);
+    throw HttpError(404, `Contact with id ${req.params.contactId} not found!`);
   }
 
   res.json(data);
