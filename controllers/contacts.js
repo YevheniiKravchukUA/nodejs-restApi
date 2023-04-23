@@ -28,9 +28,11 @@ async function addBook(req, res) {
 }
 
 async function updateBook(req, res) {
-  const data = await Contact.findByIdAndUpdate(req.params.contactId, req.body);
+  const data = await Contact.findByIdAndUpdate(req.params.contactId, req.body, {
+    new: true,
+  });
   if (!data) {
-    throw HttpError(404, `Book with id ${req.params.contactId} not found!`);
+    throw HttpError(404, `Contact with id ${req.params.contactId} not found!`);
   }
 
   res.json(data);
