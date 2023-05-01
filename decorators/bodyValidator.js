@@ -1,7 +1,6 @@
 const { HttpError } = require("../helpers");
 
 function bodyValidator(schema) {
-  console.log(schema);
   function decorator(req, res, next) {
     const { error } = schema.validate(req.body);
     if (error) {
@@ -13,4 +12,4 @@ function bodyValidator(schema) {
   return decorator;
 }
 
-module.exports = { bodyValidator };
+module.exports = bodyValidator;

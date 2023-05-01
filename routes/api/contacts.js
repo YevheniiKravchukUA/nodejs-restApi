@@ -1,32 +1,28 @@
 const express = require("express");
+const { bodyValidator } = require("../../decorators");
+const schemas = require("../../models/contact");
+const controllers = require("../../controllers/contacts");
+
 const router = express.Router();
 
-const {
-  getAllBooks,
-  getBookById,
-  addBook,
-  updateBook,
-  deleteBook,
-  updateFavoriteField,
-} = require("../../controllers/contacts");
+router.get("/", controllers.getAllBooks);
 
-const { bodyValidator } = require("../../decorators");
-const schemas = require("../../schemas");
+router.get("/:contactId", controllers.getBookById);
 
-router.get("/", getAllBooks);
+router.post("/", bodyValidator(schemas.contactSchema), controllers.addBook);
 
-router.get("/:contactId", getBookById);
+router.delete("/:contactId", controllers.deleteBook);
 
-router.post("/", bodyValidator(schemas.contactSchema), addBook);
-
-router.delete("/:contactId", deleteBook);
-
-router.put("/:contactId", bodyValidator(schemas.contactSchema), updateBook);
+router.put(
+  "/:contactId",
+  bodyValidator(schemas.contactSchema),
+  controllers.updateBook
+);
 
 router.patch(
   "/:contactId/favorite",
   bodyValidator(schemas.updateFavoriteInContactSchema),
-  updateFavoriteField
+  controllers.updateFavoriteField
 );
 
 module.exports = router;
