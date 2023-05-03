@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyValidator = require("../../decorators/bodyValidator");
-const schemas = require("../../models/users");
-const controllers = require("../../controllers/auth");
+const schemas = require("../../models/user");
+const controllers = require("../../controllers/users");
 
 const router = express.Router();
 

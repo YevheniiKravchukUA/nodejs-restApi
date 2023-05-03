@@ -9,13 +9,13 @@ router.get("/", controllers.getAllBooks);
 
 router.get("/:contactId", controllers.getBookById);
 
-router.post("/", bodyValidator(schemas.contactSchema), controllers.addBook);
+router.post("/", bodyValidator(schemas.contactJoiSchema), controllers.addBook);
 
 router.delete("/:contactId", controllers.deleteBook);
 
 router.put(
   "/:contactId",
-  bodyValidator(schemas.contactSchema),
+  bodyValidator(schemas.contactJoiSchema),
   controllers.updateBook
 );
 
